@@ -38,6 +38,9 @@ module ActiveDynamoDB
     # Various connections to DynamoDB
     #
     def dynamodb
+      # Test Mode
+      return @dynamodb=$dynamodb_test if $dynamodb_test
+      # Normal Mode
       @dynamodb||=AWS::DynamoDB.new
     end
     def dynamodb_counter_table

@@ -95,12 +95,25 @@ module ActiveDynamoDB
     end
 
     private
+
     def substitutions str
+      str=
+      if defined? Rails
+        str.
+          gsub(/%RailsEnvName%/,Rails.env.capitalize).
+          gsub(/%AppName%/,Rails.application.class.parent_name)
+      elsif $dynamodb_test
+        str.
+          gsub(/%RailsEnvName%/,"Test").
+          gsub(/%AppName%/,"MyTestApp")
+      else
+        str.
+          gsub(/%RailsEnvName%/,"NoRailsEnvName").
+          gsub(/%AppName%/,"MyApp")
+      end
       str.
-        gsub(/%RailsEnvName%/,Rails.env.capitalize).
         gsub(/%ModelName%/,model_name).
-        gsub(/%PluralModelName%/,model_name.pluralize).
-        gsub(/%AppName%/,Rails.application.class.parent_name)
+        gsub(/%PluralModelName%/,model_name.pluralize)
     end
   end
 end

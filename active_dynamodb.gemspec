@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Lee Atchison"]
   s.email       = ["lee@leeatchison.com"]
   s.homepage    = ""
-  s.summary     = %q{Rails ORM for Amazon's DynamoDB. This is ALPHA quality code currently. Please see readme.}
-  s.description = %q{Rails ORM for Amazon's DynamoDB. This is ALPHA quality code currently. Please see readme.}
+  s.summary     = %q{Rails ORM for Amazon's DynamoDB. This is ALPHA quality code currently. Please see readme on GitHub.}
+  s.description = %q{Rails ORM for Amazon's DynamoDB. This is ALPHA quality code currently. Please see readme on GitHub.}
 
   s.rubyforge_project = "active_dynamodb"
 
@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   # specify any dependencies here; for example:
-  # s.add_development_dependency "rspec"
-  # s.add_runtime_dependency "rest-client"
+  s.add_development_dependency "rspec"
+  s.add_runtime_dependency "activemodel"
+  s.add_runtime_dependency "aws-sdk"
 end

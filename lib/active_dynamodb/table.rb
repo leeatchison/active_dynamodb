@@ -18,6 +18,7 @@ module ActiveDynamoDB
       options[:table]||=:create_if_not_exist
       options[:counter_table]||=:create_if_not_exist
       if options[:counter_table]==:create_if_not_exist
+        raise InvalidCounterTable if dynamodb.tables[counter_table_name].nil?
         unless dynamodb.tables[counter_table_name].exists?
           dynamodb.tables.create(counter_table_name,options[:counter_table_read_capacity],options[:counter_table_write_capacity],hash_key:{:Counter=>:string})
         end
@@ -39,13 +40,7 @@ module ActiveDynamoDB
       end
     end
 
-    #
-    # Create the table if it doesn't exist
-    #
-    def create_table_if_not_exist hash_key="Id",read_capacity=5,write_capacity=5,wait=true
-      return if dynamodb.exists?
-      create_table hash_key,read_capacity,write_capacity,wait
-    end
+
     #
     # Delete the table
     #
@@ -93,6 +88,13 @@ module ActiveDynamoDB
     #
     def table_not_present?
       self.table_status==:not_present
+    end
+    #
+    # Check to see if the table exists (in any state)
+    #   (Opposite of table_not_present?)
+    #
+    def table_exists?
+      self.table_status!=:not_present
     end
     #
     # Sleep until the table is present...returns an error if it is not being created
