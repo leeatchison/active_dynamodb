@@ -12,5 +12,10 @@ module ActiveDynamoDB
 
     define_model_callbacks :create, :update, :save, :destroy
 
+    include ActiveDynamoDB::ConnectionInstance
+    class << self
+        include ActiveDynamoDB::Connection
+    end
+
   end
 end

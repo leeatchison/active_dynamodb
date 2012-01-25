@@ -1,5 +1,4 @@
 require "active_dynamodb/version"
-require "active_dynamodb/base"
 require "active_dynamodb/errors"
 require "active_dynamodb/dynamodb_connection"
 require "active_dynamodb/table_config"
@@ -10,6 +9,7 @@ require "active_dynamodb/query"
 require "active_dynamodb/relation"
 require "active_dynamodb/validators"
 require "active_dynamodb/persistence"
+require "active_dynamodb/base"
 
 #
 # TODOs:
