@@ -8,8 +8,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Lee Atchison"]
   s.email       = ["lee@leeatchison.com"]
   s.homepage    = ""
-  s.summary     = %q{Rails ORM for Amazon's DynamoDB.}
-  s.description = %q{Rails ORM for Amazon's DynamoDB.}
+  s.summary     = %q{Rails ORM for Amazon's DynamoDB. This is ALPHA quality code currently. Please see readme.}
+  s.description = %q{Rails ORM for Amazon's DynamoDB. This is ALPHA quality code currently. Please see readme.}
 
   s.rubyforge_project = "active_dynamodb"
 
