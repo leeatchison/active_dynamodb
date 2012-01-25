@@ -12,20 +12,23 @@
 class DynamoDBTest
   class Tables
     def initialize
-      @tables={}
+      @tables_hash={}
     end
     def [] table_name
-      @tables[table_name.to_sym]
+      @tables_hash[table_name.to_sym]
     end
     def add_mock_table table_name,mock_obj,initial_status=nil
       mock_obj.stub(:load_schema){nil}
       mock_obj.stub(:status){initial_status} if initial_status
       mock_obj.stub(:exists?){initial_status!=:not_present}
-      @tables[table_name.to_sym]=mock_obj
+      @tables_hash[table_name.to_sym]=mock_obj
     end
   end
+  def initialize
+    @tables=Tables.new
+  end
   def tables
-    @tables||=Tables.new
+    @tables
   end
 end
 
