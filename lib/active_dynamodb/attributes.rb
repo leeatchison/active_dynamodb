@@ -1,5 +1,5 @@
 module ActiveDynamoDB
-  class Base
+  module AttributeInstance
     #
     #
     # Attributes Management
@@ -69,40 +69,39 @@ module ActiveDynamoDB
     def fields
       self.class.fields
     end
-    class << self
-      def fields
-        @fields||={}
+  end
+  module Attribute
+    def fields
+      @fields||={}
+    end
+    def to_dynamodb_type key,value
+      return nil if value.nil?
+      ret=case self.fields[key.to_sym][:type]
+      when :string then value.to_s
+      when :symbol then value.to_s
+      when :integer then value.to_i
+      when :set_integers then value.map{|a|a.to_i}.to_set
+      when :set_strings then value.map{|a|a.to_s}.to_set
+      when :datetime then value.utc.to_s
+      else
+        raise InvalidAttributeType
       end
-      def to_dynamodb_type key,value
-        return nil if value.nil?
-        ret=case self.fields[key.to_sym][:type]
+      ret
+    end
+    def to_attr_type key,value
+      raise InvalidField,"Unknown field: #{key}" if fields[key].nil?
+      return nil if value.nil?
+      ret=case self.fields[key.to_sym][:type]
         when :string then value.to_s
-        when :symbol then value.to_s
+        when :symbol then value.to_sym
         when :integer then value.to_i
-        when :set_integers then value.map{|a|a.to_i}.to_set
-        when :set_strings then value.map{|a|a.to_s}.to_set
-        when :datetime then value.utc.to_s
+        when :set_integers then value.to_a.map{|a|a.to_i}
+        when :set_strings then value.to_a.map{|a|a.to_s}
+        when :datetime then value.to_datetime
         else
           raise InvalidAttributeType
-        end
-        ret
       end
-      def to_attr_type key,value
-        raise InvalidField,"Unknown field: #{key}" if fields[key].nil?
-        return nil if value.nil?
-        ret=case self.fields[key.to_sym][:type]
-          when :string then value.to_s
-          when :symbol then value.to_sym
-          when :integer then value.to_i
-          when :set_integers then value.to_a.map{|a|a.to_i}
-          when :set_strings then value.to_a.map{|a|a.to_s}
-          when :datetime then value.to_datetime
-          else
-            raise InvalidAttributeType
-        end
-        ret
-      end
-      private
+      ret
     end
   end
 end

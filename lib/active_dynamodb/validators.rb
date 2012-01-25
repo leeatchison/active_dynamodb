@@ -1,5 +1,5 @@
 module ActiveDynamoDB
-  class Base
+  module Validators
     #
     # Validators
     #

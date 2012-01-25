@@ -1,19 +1,19 @@
+#
+#
+# Query
+#
+#
 module ActiveDynamoDB
-  class Base
-    #
-    #
-    # Query
-    #
-    #
-    class << self
-      def find key
-        key=key.to_i
-        item=dynamodb_table.items[key]
-        return nil unless item and item.exists?
-        obj=new
-        obj.load_from_item item
-      end
+  module Query
+    def find key
+      key=key.to_i
+      item=dynamodb_table.items[key]
+      return nil unless item and item.exists?
+      obj=new
+      obj.load_from_item item
     end
+  end
+  module QueryInstance
     def load_from_item item
       self.attributes={}
       item.attributes.each do |key,value|

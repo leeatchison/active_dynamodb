@@ -1,5 +1,5 @@
 module ActiveDynamoDB
-  class Base
+  module PersistenceInstance
     #
     #
     # Save/Delete
@@ -70,30 +70,30 @@ module ActiveDynamoDB
       end
       @id=nil
     end
-    class<<self
-      #
-      #
-      # Create aliases...
-      #
-      #
-      def create options=nil
-        obj=new options
-        obj.save
-      end  
-      def create! options=nil
-        obj=new options
-        obj.save!
-      end  
-      #
-      #
-      # Get a unique ID for object creation
-      #
-      #
-      def get_next_available_id
-        counter_item=dynamodb_counter_table.items[counter_key_name]
-        raise InvalidCounterKey if counter_item.nil?
-        counter_item.attributes.add({count:1},{return: :updated_new})["count"].to_i
-      end
+  end
+  module Persistence
+    #
+    #
+    # Create aliases...
+    #
+    #
+    def create options=nil
+      obj=new options
+      obj.save
+    end  
+    def create! options=nil
+      obj=new options
+      obj.save!
+    end  
+    #
+    #
+    # Get a unique ID for object creation
+    #
+    #
+    def get_next_available_id
+      counter_item=dynamodb_counter_table.items[counter_key_name]
+      raise InvalidCounterKey if counter_item.nil?
+      counter_item.attributes.add({count:1},{return: :updated_new})["count"].to_i
     end
   end
 end

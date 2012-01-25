@@ -1,16 +1,15 @@
+#
+#
+# Associations
+#
+#
 module ActiveDynamoDB
-  class Base
-    #
-    #
-    # Associations
-    #
-    #
-    class<<self
-      def association_list
-        @association_list||={}
-      end
-      private
+  module Association
+    def association_list
+      @association_list||={}
     end
+  end
+  module AssociationInstance
     #
     # Used for has_many associations only...it will scan the included
     # items, and remove any duplicate items or items that the associated

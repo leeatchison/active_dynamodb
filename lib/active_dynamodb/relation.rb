@@ -141,18 +141,6 @@ module ActiveDynamoDB
       end
       items
     end
-    class<<self
-      def method_missing(id, *args, &proc)
-        return scoped.send(id,*args,&proc) if Relation::FilterList.include?(id.to_s)
-        return scoped.send(id,*args,&proc) if Relation::EndpointList.include?(id.to_s)
-        super
-      end
-      def scoped
-        Relation.new self,dynamodb_table.items,self,{type: :none}
-      end
-    end
-  end
-  class Base
     def add_or_assign obj_id,method
       association=self.class.association_list[method]
       raise InvalidAssociation if association.nil?
@@ -167,6 +155,16 @@ module ActiveDynamoDB
       else
         raise InvalidRelationshipType
       end
+    end
+  end
+  module RelationSupport
+    def method_missing(id, *args, &proc)
+      return scoped.send(id,*args,&proc) if Relation::FilterList.include?(id.to_s)
+      return scoped.send(id,*args,&proc) if Relation::EndpointList.include?(id.to_s)
+      super
+    end
+    def scoped
+      Relation.new self,dynamodb_table.items,self,{type: :none}
     end
   end
 end

@@ -13,8 +13,21 @@ module ActiveDynamoDB
     define_model_callbacks :create, :update, :save, :destroy
 
     include ActiveDynamoDB::ConnectionInstance
+    include ActiveDynamoDB::TableInstance
+    include ActiveDynamoDB::PersistenceInstance
+    include ActiveDynamoDB::QueryInstance
+    include ActiveDynamoDB::AssociationInstance
+    include ActiveDynamoDB::AttributeInstance
+    include ActiveDynamoDB::Validators
     class << self
-        include ActiveDynamoDB::Connection
+      include ActiveDynamoDB::Connection
+      include ActiveDynamoDB::TableConfig
+      include ActiveDynamoDB::Table
+      include ActiveDynamoDB::Persistence
+      include ActiveDynamoDB::Query
+      include ActiveDynamoDB::Association
+      include ActiveDynamoDB::Attribute
+      include ActiveDynamoDB::RelationSupport
     end
 
   end
