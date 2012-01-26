@@ -60,7 +60,7 @@ module ActiveDynamoDB
     #
     # Has Many Association
     #
-    def associate_many name,options={}
+    def has_many name,options={}
       # TODO: Options to add: select, field_name (similar to foreign_key, but local)
       class_name=options[:class_name]||name.to_s.singularize.capitalize
       attribute_name="#{name}_ids".to_sym
@@ -70,7 +70,6 @@ module ActiveDynamoDB
         type: :multiple,
         class_name: class_name,
         klass: Kernel.const_get(class_name),
-        inverse_of: options[:inverse_of],
         dependent: options[:dependent], # LEELEE: TODO
       }
       field attribute_name,type: :set_integers
@@ -78,7 +77,7 @@ module ActiveDynamoDB
     #
     # Belongs To Association
     #
-    def associated_with name,options={}
+    def belongs_to name,options={}
       # TODO: Options to add: select, field_name (similar to foreign_key, but local)
       class_name=options[:class_name]||name.to_s.singularize.capitalize
       attribute_name="#{name}_id".to_sym
@@ -88,7 +87,6 @@ module ActiveDynamoDB
         type: :single,
         class_name: options[:class_name]||name.to_s.singularize.capitalize,
         klass:Kernel.const_get(class_name),
-        inverse_of: options[:inverse_of],
         dependent: options[:dependent], # LEELEE: TODO
       }
       field attribute_name,type: :integer

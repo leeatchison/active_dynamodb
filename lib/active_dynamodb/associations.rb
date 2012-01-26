@@ -11,7 +11,7 @@ module ActiveDynamoDB
   end
   module AssociationInstance
     #
-    # Used for associate_many associations only...it will scan the included
+    # Used for has_many associations only...it will scan the included
     # items, and remove any duplicate items or items that the associated
     # related object has been removed...
     #
@@ -50,31 +50,11 @@ module ActiveDynamoDB
       end
     end
     def assign_association entry,val
-      #
-      # In this example:
-      #   class User < ActiveDynamoDB
-      #     associate_many :sessions, inverse_of: :user
-      #   end
-      #   class Session < ActiveDynamoDB
-      #     belongs_to :user, inverse_of: :sessions
-      #   end
-      #
-      # Then calling:
-      #   session.user=val # val is a user in this case
-      # Will actually do::
-      #   val.sessions.detach(session.user)
-      #   session.user=val
-      #   val.sessions.attach(val)
-      #
-      # (session is "self")
-      #
       if entry[:type]==:single
         if val.nil?
           self.send("#{entry[:attribute_name]}=",nil)
         else
-          val.send(entry[:inverse_of]).detach(self.send(entry[:attribute_name])) if entry[:inverse_of] and self.send(entry[:attribute_name])
           self.send("#{entry[:attribute_name]}=",val.id)
-          val.send(entry[:inverse_of]).attach(self) if entry[:inverse_of]
         end
       else
         raise InvalidAssociation

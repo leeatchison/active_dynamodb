@@ -13,13 +13,12 @@ require "active_dynamodb/base"
 
 #
 # TODOs:
-#   ***- Implement inverse_of:
 #   ***- Implement dependent: :destroy and :delete
 #   ***- Methods defined on the base class should be available from within a Relation scope (http://guides.rubyonrails.org/active_record_querying.html#scopes, Section 13.2)
 #   - Scopes
 #   - related relations
 #   - unsaved objects...
-#   - associate_many, :through=>
+#   - has_many, :through=>
 #   - caching
-#   - associate_many callbacks: before_add, after_add, before_remove, after_remove
+#   - has_many callbacks: before_add, after_add, before_remove, after_remove
 #

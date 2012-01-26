@@ -21,34 +21,8 @@ module ActiveDynamoDB
       @association_entry=association_entry
     end
     def << val
-      #
-      # In this example:
-      #   class User < ActiveDynamoDB
-      #     associate_many :sessions, inverse_of: :user
-      #   end
-      #   class Session < ActiveDynamoDB
-      #     belongs_to :user, inverse_of: :sessions
-      #   end
-      #
-      # Then calling:
-      #   user.sessions<<val # val is a session in this case
-      # Will actually do (if val's to us is a single relation):
-      #   user.sessions<<val
-      #   val.user_id=user.sessions.related_obj.id
-      # Will actually do (if val's to us is a multiple relation):
-      #   val.add_or_assign(user.id,:user)
-      #   This does:
-      #     if :user association in 'val' is a single:
-      #       val.user_id=user.id
-      #     if :user association in 'val' is a multiple:
-      #       val.users_ids<<user.id
-      #
-      # (self is Relation of user)
-      #
       ret=self.attach(val)
-      # val.send("#{@association_entry[:inverse_of]}_id=",self.related_obj.id) if @association_entry[:inverse_of]
       raise ObjectIsNotPeristed unless self.related_obj.persisted?
-      val.send("add_or_assign",self.related_obj.id,@association_entry[:inverse_of]) if @association_entry[:inverse_of]
       ret
     end
     def remove_stale_associations
