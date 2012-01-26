@@ -22,6 +22,11 @@ module ActiveDynamoDB
     end
     def update_attributes attrs
       self.assign_attributes(attrs)
+      self.save
+    end
+    def update_attributes! attrs
+      self.assign_attributes(attrs)
+      self.save!
     end
     #
     # Assign all mass assignable attributes

@@ -38,6 +38,7 @@ module ActiveDynamoDB
             sleep 1 until the_table.status==:active
         end
       end
+      self.table_status
     end
 
 
@@ -47,6 +48,7 @@ module ActiveDynamoDB
     def delete_table
       dynamodb_table.delete
       @dynamodb_table=nil
+      :terminating
     end
     #
     # Return the current read capacity

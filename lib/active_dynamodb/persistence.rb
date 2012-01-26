@@ -69,6 +69,7 @@ module ActiveDynamoDB
         attributes={}
       end
       @id=nil
+      return true
     end
   end
   module Persistence
