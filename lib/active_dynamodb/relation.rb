@@ -24,7 +24,7 @@ module ActiveDynamoDB
       #
       # In this example:
       #   class User < ActiveDynamoDB
-      #     has_many :sessions, inverse_of: :user
+      #     associate_many :sessions, inverse_of: :user
       #   end
       #   class Session < ActiveDynamoDB
       #     belongs_to :user, inverse_of: :sessions

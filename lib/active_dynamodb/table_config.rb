@@ -60,7 +60,7 @@ module ActiveDynamoDB
     #
     # Has Many Association
     #
-    def has_many name,options={}
+    def associate_many name,options={}
       # TODO: Options to add: select, field_name (similar to foreign_key, but local)
       class_name=options[:class_name]||name.to_s.singularize.capitalize
       attribute_name="#{name}_ids".to_sym
@@ -78,7 +78,7 @@ module ActiveDynamoDB
     #
     # Belongs To Association
     #
-    def belongs_to name,options={}
+    def associated_with name,options={}
       # TODO: Options to add: select, field_name (similar to foreign_key, but local)
       class_name=options[:class_name]||name.to_s.singularize.capitalize
       attribute_name="#{name}_id".to_sym

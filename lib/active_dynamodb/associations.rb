@@ -11,7 +11,7 @@ module ActiveDynamoDB
   end
   module AssociationInstance
     #
-    # Used for has_many associations only...it will scan the included
+    # Used for associate_many associations only...it will scan the included
     # items, and remove any duplicate items or items that the associated
     # related object has been removed...
     #
@@ -53,7 +53,7 @@ module ActiveDynamoDB
       #
       # In this example:
       #   class User < ActiveDynamoDB
-      #     has_many :sessions, inverse_of: :user
+      #     associate_many :sessions, inverse_of: :user
       #   end
       #   class Session < ActiveDynamoDB
       #     belongs_to :user, inverse_of: :sessions

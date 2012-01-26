@@ -19,7 +19,7 @@ require "active_dynamodb/base"
 #   - Scopes
 #   - related relations
 #   - unsaved objects...
-#   - has_many, :through=>
+#   - associate_many, :through=>
 #   - caching
-#   - has_many callbacks: before_add, after_add, before_remove, after_remove
+#   - associate_many callbacks: before_add, after_add, before_remove, after_remove
 #
