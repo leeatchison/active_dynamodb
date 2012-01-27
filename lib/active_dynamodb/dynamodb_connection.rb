@@ -41,11 +41,16 @@ module ActiveDynamoDB
       # Test Mode
       return @dynamodb=$dynamodb_test if $dynamodb_test
       # Normal Mode
-      @dynamodb||=AWS::DynamoDB.new
+      if @dynamodb.nil?
+        @dynamodb=AWS::DynamoDB.new
+        ActiveDynamoDB::Logger.log_call self,"Open DynamoDB Connection"
+      end
+      @dynamodb
     end
     def dynamodb_counter_table
       return @dynamodb_counter_table unless @dynamodb_counter_table.nil?
       the_table=dynamodb.tables[counter_table_name]
+      ActiveDynamoDB::Logger.log_call self,"dynamodb.tables[#{table_name}]"
       raise CantFindTable,table_name if the_table.nil?
       the_table.load_schema
       @dynamodb_counter_table=the_table
@@ -53,15 +58,20 @@ module ActiveDynamoDB
     def dynamodb_table
       return @dynamodb_table unless @dynamodb_table.nil?
       the_table=dynamodb.tables[table_name]
+      ActiveDynamoDB::Logger.log_call self,"dynamodb.tables[#{table_name}]"
       raise CantFindTable,table_name if the_table.nil?
       the_table.load_schema
       @dynamodb_table=the_table
     end
     def counter_hash_key
-      dynamodb_counter_table.hash_key.name
+      ret=dynamodb_counter_table.hash_key.name
+      ActiveDynamoDB::Logger.log_call self,"dynamodb_counter_table.hash_key"
+      ret
     end
     def hash_key
-      dynamodb_table.hash_key.name
+      ret=dynamodb_table.hash_key.name
+      ActiveDynamoDB::Logger.log_call self,"dynamodb_table.hash_key"
+      ret
     end
   end
 end

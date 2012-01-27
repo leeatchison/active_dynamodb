@@ -31,6 +31,7 @@ module ActiveDynamoDB
 
     def each &proc
       result_items=follow_filters(@association_items)
+      ActiveDynamoDB::Logger.log_call self.related_obj,"dynamodb_table.items.|filtered|.each"
       result_items.each do |item|
         obj=@the_class.new
         obj.load_from_item item
@@ -40,6 +41,7 @@ module ActiveDynamoDB
     end
     def count
       result_items=follow_filters(@association_items)
+      ActiveDynamoDB::Logger.log_call self.related_obj,"dynamodb_table.items.|filtered|.count"
       result_items.count
     end
     def size
@@ -55,7 +57,9 @@ module ActiveDynamoDB
     def delete_all
       cnt=0
       result_items=follow_filters(@association_items)
+      ActiveDynamoDB::Logger.log_call self.related_obj,"dynamodb_table.items.|filtered|.each"
       result_items.each do |item|
+        ActiveDynamoDB::Logger.log_call self.related_obj,"dynamodb_table.items.|filtered|.each: delete"
         item.delete
         cnt+=1
       end
@@ -64,6 +68,7 @@ module ActiveDynamoDB
     def destroy_all
       cnt=0
       result_items=follow_filters(@association_items)
+      ActiveDynamoDB::Logger.log_call self.related_obj,"dynamodb_table.items.|filtered|.each"
       result_items.each do |item|
         obj=@the_class.new
         obj.load_from_item item
@@ -74,6 +79,7 @@ module ActiveDynamoDB
     end
     def first
       item=follow_filters(@association_items).first
+      ActiveDynamoDB::Logger.log_call self.related_obj,"dynamodb_table.items.|filtered|.first"
       return nil if item.nil?
       obj=@the_class.new
       obj.load_from_item item
@@ -138,7 +144,8 @@ module ActiveDynamoDB
       super
     end
     def scoped
-      Relation.new self,dynamodb_table.items,self,{type: :none}
+      ret=Relation.new self,dynamodb_table.items,self,{type: :none}
+      ret
     end
   end
 end

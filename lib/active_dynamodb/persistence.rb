@@ -26,6 +26,7 @@ module ActiveDynamoDB
           run_callbacks :update do
             self.updated_at=DateTime.now unless fields[:updated_at].nil?
             item=dynamodb_table.items[@id]
+            ActiveDynamoDB::Logger.log_call self,"dynamodb_table.items[#{@id}]"
             raise CouldNotFindItemInDatabase unless item
             item.attributes.update do |u|
               self.changes.each do |key,change|
@@ -49,6 +50,7 @@ module ActiveDynamoDB
               save_data[key]=attributes[key]
             end
             dynamodb_table.items.create save_data
+            ActiveDynamoDB::Logger.log_call self,"dynamodb_table.items.create"
             @id=the_id
             @previously_changed = changes
             @changed_attributes.clear
@@ -59,6 +61,7 @@ module ActiveDynamoDB
     end
     def delete
       item=dynamodb_table.items[@id].delete
+      ActiveDynamoDB::Logger.log_call self,"dynamodb_table.items[#{@id}].delete"
       attributes={}
       @id=nil
     end
@@ -66,6 +69,7 @@ module ActiveDynamoDB
       run_callbacks :destroy do
         # TODO: Add on destroy options in field declaration here...
         item=dynamodb_table.items[@id].delete
+        ActiveDynamoDB::Logger.log_call self,"dynamodb_table.items[#{@id}].delete"
         attributes={}
       end
       @id=nil

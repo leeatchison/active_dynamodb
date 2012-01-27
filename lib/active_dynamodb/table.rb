@@ -19,23 +19,43 @@ module ActiveDynamoDB
       options[:counter_table]||=:create_if_not_exist
       if options[:counter_table]==:create_if_not_exist
         raise InvalidCounterTable if dynamodb.tables[counter_table_name].nil?
-        unless dynamodb.tables[counter_table_name].exists?
+        ActiveDynamoDB::Logger.log_call self,"dynamodb.tables[#{counter_table_name}].nil?"
+        exists=dynamodb.tables[counter_table_name].exists?
+        ActiveDynamoDB::Logger.log_call self,"dynamodb.tables[#{counter_table_name}].exists?"
+        unless exists
           dynamodb.tables.create(counter_table_name,options[:counter_table_read_capacity],options[:counter_table_write_capacity],hash_key:{:Counter=>:string})
+          ActiveDynamoDB::Logger.log_call self,"dynamodb.tables.create(#{counter_table_name},#{options[:counter_table_read_capacity]},#{options[:counter_table_write_capacity]},hash_key:{:Counter=>:string}"
         end
       end
       if options[:table]==:create_if_not_exist
-        unless dynamodb.tables[table_name].exists?
+        exists=dynamodb.tables[table_name].exists?
+        ActiveDynamoDB::Logger.log_call self,"dynamodb.tables[#{table_name}].exists?"
+        unless exists
           dynamodb.tables.create(table_name,options[:read_capacity],options[:write_capacity],hash_key:{options[:hash_key]=>:number})
+          ActiveDynamoDB::Logger.log_call self,"dynamodb.tables.create(#{table_name},#{options[:counter_table_read_capacity]},#{options[:counter_table_write_capacity]},hash_key:{:Counter=>:string}"
         end
       end
       if options[:mode]==:wait
         if options[:counter_table]==:create_if_not_exist
             the_table=dynamodb.tables[counter_table_name]
-            sleep 1 until the_table.status==:active
+            ActiveDynamoDB::Logger.log_call self,"dynamodb.tables[#{counter_table_name}]"
+            status=the_table.status
+            ActiveDynamoDB::Logger.log_call self,"dynamodb.tables[#{counter_table_name}].status=#{status.inspect}"
+            until status==:active
+              sleep 1
+              status=the_table.status
+              ActiveDynamoDB::Logger.log_call self,"dynamodb.tables[#{counter_table_name}].status=#{status.inspect}"
+            end
         end
         if options[:table]==:create_if_not_exist
             the_table=dynamodb.tables[table_name]
-            sleep 1 until the_table.status==:active
+            status=the_table.status
+            ActiveDynamoDB::Logger.log_call self,"dynamodb.tables[#{table_name}].status=#{status.inspect}"
+            until status==:active
+              sleep 1
+              status=the_table.status
+              ActiveDynamoDB::Logger.log_call self,"dynamodb.tables[#{table_name}].status=#{status.inspect}"
+            end
         end
       end
       self.table_status
@@ -47,6 +67,7 @@ module ActiveDynamoDB
     #
     def delete_table
       dynamodb_table.delete
+      ActiveDynamoDB::Logger.log_call self,"dynamodb_table.delete"
       @dynamodb_table=nil
       :terminating
     end
@@ -54,29 +75,39 @@ module ActiveDynamoDB
     # Return the current read capacity
     #
     def read_capacity_units
-      dynamodb_table.read_capacity_units
+      ret=dynamodb_table.read_capacity_units
+      ActiveDynamoDB::Logger.log_call self,"dynamodb_table.read_capacity_units=#{ret}"
+      ret
     end
     #
     # Return the current write capacity
     #
     def write_capacity_units
-      dynamodb_table.write_capacity_units
+      ret=dynamodb_table.write_capacity_units
+      ActiveDynamoDB::Logger.log_call self,"dynamodb_table.write_capacity_units=#{ret}"
+      ret
     end
     #
     # Set new provisioned capacity
     #
     def provision_capacity read_capacity,write_capacity
-      dynamodb_table.provision_throughput read_capacity_units: read_capacity, write_capacity_units: write_capacity
+      ret=dynamodb_table.provision_throughput read_capacity_units: read_capacity, write_capacity_units: write_capacity
+        ActiveDynamoDB::Logger.log_call self,"dynamodb_table.provision_throughput read_capacity_units: #{read_capacity},write_capacity_units: #{write_capacity}"
+      ret
     end
     #
     # Return the table status
     # One of: :active, :creating, :termating, :not_present
     #
     def table_status
-      dynamodb_table.status
+      ret=dynamodb_table.status
+      ActiveDynamoDB::Logger.log_call self,"dynamodb_table.status=#{ret.inspect}"
+      ret
     rescue AWS::DynamoDB::Errors::ResourceNotFoundException
+      ActiveDynamoDB::Logger.log_call self,"dynamodb_table.status=:not_present"
       return :not_present
     rescue TypeError # The AWS SDK returns this error during the termination process...
+      ActiveDynamoDB::Logger.log_call self,"dynamodb_table.status=:terminating"
       return :termating
     end
     #

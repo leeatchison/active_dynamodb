@@ -8,6 +8,7 @@ module ActiveDynamoDB
     def find key
       key=key.to_i
       item=dynamodb_table.items[key]
+      ActiveDynamoDB::Logger.log_call self,"dynamodb_table.items[#{key}]"
       return nil unless item and item.exists?
       obj=new
       obj.load_from_item item

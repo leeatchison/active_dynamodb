@@ -1,5 +1,6 @@
 require "active_dynamodb/version"
 require "active_dynamodb/errors"
+require "active_dynamodb/logger"
 require "active_dynamodb/dynamodb_connection"
 require "active_dynamodb/table_config"
 require "active_dynamodb/table"

@@ -29,6 +29,5 @@ module ActiveDynamoDB
       include ActiveDynamoDB::Attribute
       include ActiveDynamoDB::RelationSupport
     end
-
   end
 end

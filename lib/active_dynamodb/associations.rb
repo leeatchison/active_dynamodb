@@ -35,7 +35,9 @@ module ActiveDynamoDB
     end
     def call_association entry
       if entry[:type]==:multiple
-        rel=Relation.new(entry[:klass],entry[:klass].dynamodb_table.items,self,entry)
+        items=entry[:klass].dynamodb_table.items
+        ActiveDynamoDB::Logger.log_call self,"dynamodb_table.items"
+        rel=Relation.new(entry[:klass],items,self,entry)
         the_list=self.attributes[entry[:attribute_name].to_sym]
         if the_list.nil? or the_list.size==0
           rel=rel.where(entry[:klass].hash_key).is_null # Should always return an empty set...since everything must have a hash_key
