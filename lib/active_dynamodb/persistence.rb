@@ -9,15 +9,19 @@ module ActiveDynamoDB
       !@id.nil?
     end
     def save
-      return false unless valid?
+      run_callbacks :validation do
+        return false unless valid?
+      end
       internal_save!
       return self
     rescue =>err
       return nil
     end
     def save!
-      self.valid?
-      raise InvalidAttribute unless valid?
+      run_callbacks :validation do
+        self.valid?
+        raise InvalidAttribute unless valid?
+      end
       internal_save!
     end  
     def internal_save!

@@ -10,7 +10,7 @@ module ActiveDynamoDB
     include ActiveModel::Dirty
     extend ActiveModel::Callbacks
 
-    define_model_callbacks :create, :update, :save, :destroy
+    define_model_callbacks :create, :update, :save, :destroy, :validation
 
     include ActiveDynamoDB::ConnectionInstance
     include ActiveDynamoDB::TableInstance
