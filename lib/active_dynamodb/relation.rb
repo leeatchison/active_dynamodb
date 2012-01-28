@@ -47,6 +47,13 @@ module ActiveDynamoDB
     def size
       count
     end
+    def empty?
+      self.size==0
+    end
+    def map
+      # TODO: This should be more efficient...
+      self.all.map
+    end
     def all
       ret=[]
       self.each do |item|

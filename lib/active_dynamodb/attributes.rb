@@ -79,15 +79,17 @@ module ActiveDynamoDB
     def fields
       @fields||={}
     end
+    # TODO: Should we store the value in the "used" format, and only change on persist, rather than store in the persisted format? Will save on object duping...
     def to_dynamodb_type key,value
       return nil if value.nil?
       ret=case self.fields[key.to_sym][:type]
       when :string then value.to_s
       when :symbol then value.to_s
       when :integer then value.to_i
-      when :set_integers then value.map{|a|a.to_i}.to_set
-      when :set_strings then value.map{|a|a.to_s}.to_set
-      when :datetime then value.utc.to_s
+      when :set_integers then value.map{|a|a.to_i}.to_a
+      when :set_strings then value.map{|a|a.to_s}.to_a
+      when :datetime then (value=="") ? nil : value.to_datetime.utc.to_s
+      when :date then (value=="") ? nil : value.to_date.to_s
       else
         raise InvalidAttributeType
       end
@@ -103,8 +105,9 @@ module ActiveDynamoDB
         when :set_integers then value.to_a.map{|a|a.to_i}
         when :set_strings then value.to_a.map{|a|a.to_s}
         when :datetime then value.to_datetime
+        when :date then value.to_date
         else
-          raise InvalidAttributeType
+          raise InvalidAttributeType,"Invalid type: #{self.fields[key.to_sym][:type].inspect}"
       end
       ret
     end

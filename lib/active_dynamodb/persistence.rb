@@ -30,8 +30,11 @@ module ActiveDynamoDB
             raise CouldNotFindItemInDatabase unless item
             item.attributes.update do |u|
               self.changes.each do |key,change|
-                # u.set(key=>change[1])
-                u.set(key=>attributes[key])
+                val=attributes[key]
+                field_type=self.fields[key.to_sym][:type]
+                is_hash=(field_type==:set_integers) or (field_type==:set_strings)
+                val=nil if is_hash and val.size==0
+                u.set(key=>val)
               end
             end
             @previously_changed = changes
